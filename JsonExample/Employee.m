@@ -9,5 +9,5 @@
 #import "Employee.h"
 
 @implementation Employee
-
+@synthesize empId,firstName,designation,salary,phoneno;
 @end

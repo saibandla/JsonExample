@@ -11,7 +11,6 @@
 @interface NewEmpViewController : UIViewController<UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *txtEmpId;
 @property (weak, nonatomic) IBOutlet UITextField *txtFirstNmae;
-@property (weak, nonatomic) IBOutlet UITextField *txtLastName;
 @property (weak, nonatomic) IBOutlet UITextField *txtDesignation;
 @property (weak, nonatomic) IBOutlet UITextField *txtSalary;
 @property (weak, nonatomic) IBOutlet UITextField *txtPhoneno;

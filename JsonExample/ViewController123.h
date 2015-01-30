@@ -7,13 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Employee.h"
 
 @interface ViewController123 : UIViewController
 @property(nonatomic,strong)IBOutlet UITextField *txtEmpId;
 @property (weak, nonatomic) IBOutlet UITextField *txtFistName;
-@property (weak, nonatomic) IBOutlet UITextField *txtLastName;
 @property (weak, nonatomic) IBOutlet UITextField *txtDesignation;
 @property (weak, nonatomic) IBOutlet UITextField *txtPhoneno;
 
 @property (weak, nonatomic) IBOutlet UITextField *txtSalary;
+@property(nonatomic,strong) Employee *emp;
 @end

@@ -7,13 +7,14 @@
 //
 
 #import "EmployeeListViewController.h"
-
+#import "AppDelegate.h"
+#import "Employee.h"
 @interface EmployeeListViewController ()
 
 @end
 
 @implementation EmployeeListViewController
-
+AppDelegate *app;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -26,7 +27,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    app=[[UIApplication sharedApplication] delegate];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  
@@ -53,7 +54,7 @@
 {
 #warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return 4;
+    return app.empolyes.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -64,7 +65,8 @@
     {
         cell=[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
-    cell.textLabel.text=@"Bhargav";
+    Employee *emp=[app.empolyes objectAtIndex:indexPath.row];
+    cell.textLabel.text=emp.firstName;
     // Configure the cell...
     
     return cell;

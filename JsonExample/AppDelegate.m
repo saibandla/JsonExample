@@ -9,10 +9,11 @@
 #import "AppDelegate.h"
 
 @implementation AppDelegate
-
+@synthesize empolyes;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    empolyes=[[NSMutableArray alloc]init];
     return YES;
 }
 							
