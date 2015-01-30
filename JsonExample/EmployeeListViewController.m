@@ -7,14 +7,16 @@
 //
 
 #import "EmployeeListViewController.h"
-#import "AppDelegate.h"
+#import "ViewController123.h"
 #import "Employee.h"
 @interface EmployeeListViewController ()
 
 @end
 
 @implementation EmployeeListViewController
-AppDelegate *app;
+NSArray *listdata;
+NSMutableArray *NamesList;
+@synthesize filteredArray,SearchBar;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -27,51 +29,105 @@ AppDelegate *app;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    app=[[UIApplication sharedApplication] delegate];
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
+-(void)viewWillAppear:(BOOL)animated
+{
+    NSString *serverUrl=@"http://joomerang.geniusport.com/geniusport/api.php?json=[{\"method_identifier\":\"getAllEmployees\"}]";
+    serverUrl=[serverUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NamesList=[[NSMutableArray alloc]init];
+    NSData *data=[NSData dataWithContentsOfURL:[NSURL URLWithString:serverUrl]];
+    NSError *error;
+    NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+    listdata=[dic objectForKey:@"response"];
+    for(NSDictionary *loc in listdata)
+    {
+        [NamesList addObject:[loc objectForKey:@"fullName"]];
+    }
+    self.filteredArray = [NSMutableArray arrayWithCapacity:[listdata count]];
+    [self.tableView reloadData];
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSDictionary *currentOBJ;
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        currentOBJ=[filteredArray objectAtIndex:indexPath.row];
+        [self.searchDisplayController setActive:NO animated:YES];
+    }
+    else {
+        
+currentOBJ=[listdata objectAtIndex:indexPath.row];
+    }
+    NSString *empid=[currentOBJ objectForKey:@"empId"];
+    ViewController123 *details=[[UIStoryboard storyboardWithName:@"Main"
+                                                          bundle:nil]
+                                instantiateViewControllerWithIdentifier:@"DetailsViewController"];
+    details.empId=empid;
+    [self.navigationController pushViewController:details animated:YES];
 
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
     // Return the number of sections.
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return app.empolyes.count;
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        return [filteredArray count];
+    } else {
+        return [NamesList count];
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"EmployeeCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-    if(cell==nil)
-    {
-        cell=[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-    }
-    Employee *emp=[app.empolyes objectAtIndex:indexPath.row];
-    cell.textLabel.text=emp.firstName;
-    // Configure the cell...
+    UITableViewCell *cell;
     
+        cell=[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    
+    NSDictionary *currentOBJ;
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+ currentOBJ=[filteredArray objectAtIndex:indexPath.row];
+    } else {
+ currentOBJ=[listdata objectAtIndex:indexPath.row];
+    }
+    cell.textLabel.text=[currentOBJ objectForKey:@"fullName"];
     return cell;
 }
+-(void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope {
+    // Update the filtered array based on the search text and scope.
+    // Remove all objects from the filtered search array
+    [self.filteredArray removeAllObjects];
+    // Filter the array using NSPredicate
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"fullName contains[c] %@",searchText];
+  
+    filteredArray = [NSMutableArray arrayWithArray:[[listdata copy] filteredArrayUsingPredicate:predicate]];
+}
+-(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
+    // Tells the table data source to reload when text changes
+    [self filterContentForSearchText:searchString scope:
+     [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
+    // Return YES to cause the search result table view to be reloaded.
+    return YES;
+}
 
+-(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption {
+    // Tells the table data source to reload when scope bar selection changes
+    [self filterContentForSearchText:self.searchDisplayController.searchBar.text scope:
+     [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:searchOption]];
+    // Return YES to cause the search result table view to be reloaded.
+    return YES;
+}
 /*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath

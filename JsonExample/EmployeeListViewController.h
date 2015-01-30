@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface EmployeeListViewController : UITableViewController
-
+@interface EmployeeListViewController : UITableViewController<UISearchBarDelegate, UISearchDisplayDelegate>
+@property (strong,nonatomic) NSMutableArray *filteredArray;
+@property IBOutlet UISearchBar *SearchBar;
 @end
