@@ -21,6 +21,9 @@
 		4CDBFC2C1A7B3F960007B938 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4CDBFC2A1A7B3F960007B938 /* InfoPlist.strings */; };
 		4CDBFC2E1A7B3F960007B938 /* JsonExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CDBFC2D1A7B3F960007B938 /* JsonExampleTests.m */; };
 		4CDBFC391A7B40B10007B938 /* EmployeeListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CDBFC381A7B40B10007B938 /* EmployeeListViewController.m */; };
+		4CDBFC3C1A7B4A9B0007B938 /* NewEmpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CDBFC3B1A7B4A9B0007B938 /* NewEmpViewController.m */; };
+		4CDBFC3F1A7B4D470007B938 /* Employee.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CDBFC3E1A7B4D470007B938 /* Employee.m */; };
+		4CDBFC4B1A7B51C10007B938 /* ViewController123.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CDBFC4A1A7B51C10007B938 /* ViewController123.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +56,12 @@
 		4CDBFC2D1A7B3F960007B938 /* JsonExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JsonExampleTests.m; sourceTree = "<group>"; };
 		4CDBFC371A7B40B10007B938 /* EmployeeListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmployeeListViewController.h; sourceTree = "<group>"; };
 		4CDBFC381A7B40B10007B938 /* EmployeeListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmployeeListViewController.m; sourceTree = "<group>"; };
+		4CDBFC3A1A7B4A9B0007B938 /* NewEmpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewEmpViewController.h; sourceTree = "<group>"; };
+		4CDBFC3B1A7B4A9B0007B938 /* NewEmpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewEmpViewController.m; sourceTree = "<group>"; };
+		4CDBFC3D1A7B4D470007B938 /* Employee.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Employee.h; sourceTree = "<group>"; };
+		4CDBFC3E1A7B4D470007B938 /* Employee.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Employee.m; sourceTree = "<group>"; };
+		4CDBFC491A7B51C10007B938 /* ViewController123.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController123.h; sourceTree = "<group>"; };
+		4CDBFC4A1A7B51C10007B938 /* ViewController123.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController123.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +126,12 @@
 				4CDBFC141A7B3F950007B938 /* Main.storyboard */,
 				4CDBFC371A7B40B10007B938 /* EmployeeListViewController.h */,
 				4CDBFC381A7B40B10007B938 /* EmployeeListViewController.m */,
+				4CDBFC3A1A7B4A9B0007B938 /* NewEmpViewController.h */,
+				4CDBFC3B1A7B4A9B0007B938 /* NewEmpViewController.m */,
+				4CDBFC491A7B51C10007B938 /* ViewController123.h */,
+				4CDBFC4A1A7B51C10007B938 /* ViewController123.m */,
+				4CDBFC3D1A7B4D470007B938 /* Employee.h */,
+				4CDBFC3E1A7B4D470007B938 /* Employee.m */,
 				4CDBFC1A1A7B3F950007B938 /* Images.xcassets */,
 				4CDBFC091A7B3F950007B938 /* Supporting Files */,
 			);
@@ -249,6 +264,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4CDBFC3F1A7B4D470007B938 /* Employee.m in Sources */,
+				4CDBFC3C1A7B4A9B0007B938 /* NewEmpViewController.m in Sources */,
+				4CDBFC4B1A7B51C10007B938 /* ViewController123.m in Sources */,
 				4CDBFC391A7B40B10007B938 /* EmployeeListViewController.m in Sources */,
 				4CDBFC131A7B3F950007B938 /* AppDelegate.m in Sources */,
 				4CDBFC0F1A7B3F950007B938 /* main.m in Sources */,
@@ -460,6 +478,7 @@
 				4CDBFC331A7B3F960007B938 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4CDBFC341A7B3F960007B938 /* Build configuration list for PBXNativeTarget "JsonExampleTests" */ = {
 			isa = XCConfigurationList;
@@ -468,6 +487,7 @@
 				4CDBFC361A7B3F960007B938 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
