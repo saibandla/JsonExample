@@ -11,4 +11,6 @@
 @interface EmployeeListViewController : UITableViewController<UISearchBarDelegate, UISearchDisplayDelegate>
 @property (strong,nonatomic) NSMutableArray *filteredArray;
 @property IBOutlet UISearchBar *SearchBar;
++(BOOL)isserverContentChanged;
++(void)setserverContentChanged:(BOOL)flag;
 @end

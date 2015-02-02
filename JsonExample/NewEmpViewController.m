@@ -38,6 +38,8 @@ UIAlertView *alert;
         {
             [v resignFirstResponder];
         }
+        
+        
     }
 }
 - (void)didReceiveMemoryWarning

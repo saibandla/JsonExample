@@ -5,18 +5,20 @@
 //  Created by Sesha Sai Bhargav Bandla on 1/30/15.
 //  Copyright (c) 2015 Sesha Sai Bhargav Bandla. All rights reserved.
 //
-
+#define kBgQueue dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
 #import "EmployeeListViewController.h"
 #import "ViewController123.h"
 #import "Employee.h"
 @interface EmployeeListViewController ()
-
+@property(nonatomic,strong)NSMutableArray *selectedCellsArray;
 @end
 
 @implementation EmployeeListViewController
 NSArray *listdata;
 NSMutableArray *NamesList;
+
 @synthesize filteredArray,SearchBar;
+BOOL servercontentChanged;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -25,17 +27,55 @@ NSMutableArray *NamesList;
     }
     return self;
 }
+-(NSMutableArray *)selectedCellsArray
+{
+    if(!_selectedCellsArray)
+    {
+        _selectedCellsArray=[[NSMutableArray alloc]init];
+    }
+    return _selectedCellsArray;
+}
++(BOOL)isserverContentChanged
+{
+    return servercontentChanged;
+}
++(void)setserverContentChanged:(BOOL)flag
+{
+    servercontentChanged=flag;
+}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    servercontentChanged=YES;
 }
 -(void)viewWillAppear:(BOOL)animated
 {
-    NSString *serverUrl=@"http://joomerang.geniusport.com/geniusport/api.php?json=[{\"method_identifier\":\"getAllEmployees\"}]";
-    serverUrl=[serverUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NamesList=[[NSMutableArray alloc]init];
-    NSData *data=[NSData dataWithContentsOfURL:[NSURL URLWithString:serverUrl]];
+    [self reloadEntireView];
+}
+-(void)reloadEntireView
+{
+    
+    if(servercontentChanged)
+    {
+        dispatch_async(kBgQueue, ^{
+            NSString *serverUrl=@"http://joomerang.geniusport.com/geniusport/api.php?json=[{\"method_identifier\":\"getAllEmployees\"}]";
+            serverUrl=[serverUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            NamesList=[[NSMutableArray alloc]init];
+            NSData *data=[NSData dataWithContentsOfURL:[NSURL URLWithString:serverUrl]];
+            NSLog(@"API Called");
+            [self performSelectorOnMainThread:@selector(displayListonTable:) withObject:data waitUntilDone:YES];
+            //             [self performSelectorInBackground:@selector(displayListonTable:) withObject:data waitUntilDone:YES];
+        });
+    }
+    else
+    {
+        [self.tableView reloadData];
+    }
+}
+-(void)displayListonTable:(NSData *)data
+{
     NSError *error;
     NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
     listdata=[dic objectForKey:@"response"];
@@ -45,9 +85,11 @@ NSMutableArray *NamesList;
     }
     self.filteredArray = [NSMutableArray arrayWithCapacity:[listdata count]];
     [self.tableView reloadData];
+    servercontentChanged=NO;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
     NSDictionary *currentOBJ;
     if (tableView == self.searchDisplayController.searchResultsTableView) {
         currentOBJ=[filteredArray objectAtIndex:indexPath.row];
@@ -58,11 +100,18 @@ NSMutableArray *NamesList;
 currentOBJ=[listdata objectAtIndex:indexPath.row];
     }
     NSString *empid=[currentOBJ objectForKey:@"empId"];
+    if(!self.tableView.allowsMultipleSelection)
+    {
     ViewController123 *details=[[UIStoryboard storyboardWithName:@"Main"
                                                           bundle:nil]
                                 instantiateViewControllerWithIdentifier:@"DetailsViewController"];
     details.empId=empid;
     [self.navigationController pushViewController:details animated:YES];
+    }
+    else
+    {
+        [self.selectedCellsArray addObject:empid];
+    }
 
 }
 - (void)didReceiveMemoryWarning
@@ -127,6 +176,51 @@ currentOBJ=[listdata objectAtIndex:indexPath.row];
      [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:searchOption]];
     // Return YES to cause the search result table view to be reloaded.
     return YES;
+}
+- (IBAction)onClickBarButton:(UIBarButtonItem *)sender {
+    if([sender.title isEqualToString:@"Edit"])
+    {
+        [self.tableView setAllowsMultipleSelection:YES];
+        sender.title=@"Delete";
+        
+    }
+    else
+    {
+        for(NSString *empId in self.selectedCellsArray)
+        {
+            dispatch_async(kBgQueue, ^{
+                
+                NSString *str=[NSString stringWithFormat:@"http://joomerang.geniusport.com/geniusport/api.php?json=[{\"method_identifier\":\"deleteEmployee\",\"params\":{\"empid\":\"%@\"}}]",empId];
+                str =[str stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                NSURL *url=[NSURL URLWithString:str];
+                NSURLRequest *req=[NSURLRequest requestWithURL:url];
+                NSURLResponse *response;
+                NSError *error;
+                NSData *responsedata=[NSURLConnection sendSynchronousRequest:req returningResponse:&response error:&error];
+                [self performSelectorOnMainThread:@selector(showMessageToUserafterDelete:) withObject:responsedata waitUntilDone:YES];
+                
+            });
+
+        }
+        sender.title=@"Edit";
+    }
+}
+-(void)showMessageToUserafterDelete:(NSData *)responseData;
+{
+    
+    
+    if(self.selectedCellsArray.count>=1)
+    {
+        [self.selectedCellsArray removeObjectAtIndex:0];
+        if(self.selectedCellsArray.count==0)
+        {
+            servercontentChanged=YES;
+            [self reloadEntireView];
+[self.tableView setAllowsMultipleSelection:NO];
+        }
+        return;
+    }
+    
 }
 /*
 // Override to support conditional editing of the table view.
